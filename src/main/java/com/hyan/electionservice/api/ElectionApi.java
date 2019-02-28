@@ -1,6 +1,7 @@
 package com.hyan.electionservice.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyan.electionservice.api.request.ElectionRequest;
 import com.hyan.electionservice.service.ElectionService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;

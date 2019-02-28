@@ -1,4 +1,4 @@
-package com.hyan.electionservice.api;
+package com.hyan.electionservice.api.request;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
