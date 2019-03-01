@@ -2,6 +2,7 @@ package com.hyan.electionservice.service;
 
 import com.hyan.electionservice.entity.Associate;
 import com.hyan.electionservice.entity.DecisionType;
+import com.hyan.electionservice.entity.Election;
 import com.hyan.electionservice.mapper.ElectionMapper;
 import com.hyan.electionservice.repository.AssociateRepository;
 import com.hyan.electionservice.repository.ElectionRepository;
@@ -56,6 +57,11 @@ public class ElectionService {
                     electionRepository.save(election).subscribe();
                     return election;
                 }).then();
+    }
+
+    public Mono<Election> resultVote(String electionCode){
+        return electionRepository.findById(electionCode)
+                .switchIfEmpty(Mono.error(new Exception()));
     }
 
 
