@@ -2,12 +2,12 @@ package com.hyan.electionservice.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyan.electionservice.api.request.ElectionRequest;
+import com.hyan.electionservice.entity.DecisionType;
 import com.hyan.electionservice.service.ElectionService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -18,7 +18,7 @@ public class ElectionApi {
     private ElectionService electionService;
     private ObjectMapper objectMapper;
 
-    public ElectionApi (ElectionService electionService, ObjectMapper objectMapper) {
+    public ElectionApi(ElectionService electionService, ObjectMapper objectMapper) {
         this.electionService = electionService;
         this.objectMapper = objectMapper;
     }
@@ -26,18 +26,20 @@ public class ElectionApi {
 
     @PostMapping
     @ApiOperation(value = "Cria sessão/pauta de votação")
-    public Mono<String> postElection(ElectionRequest request){
+    public Mono<String> postElection(ElectionRequest request) {
 
-        electionService.create(request.getName(),request.getTime());
-
-        return null;
+        return electionService.create(request.getName(), request.getExpirationToMinutes());
     }
 
-    @PostMapping
-    @ApiOperation(value = "Cria sessão de votação")
-    public Mono<String> postElection(){
+    @PostMapping("/{election}/vote")
+    @ApiOperation(value = "Votação")
+    public Mono<Void> putVote(@PathVariable String election,
+                                @RequestParam @ApiParam("Escolha do voto (SIM, NAO)") DecisionType decisionType,
+                                @RequestParam String  associate) {
 
-        return null;
+
+
+        return electionService.voting(election,decisionType.name(),associate);
     }
 
 

@@ -1,15 +1,18 @@
 package com.hyan.electionservice.api.request;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.TimeZone;
 
 public class ElectionRequest {
 
-    @NotEmpty
+    @NotEmpty(message = "Nome da pauta/Eleição obrigatório.")
+    @ApiModelProperty("Nome da pauta/eleição.")
     private String name;
-    @NotNull
-    private TimeZone time;
+    @ApiModelProperty("Tempo de duração da pauta.")
+    private Integer expirationToMinutes;
 
 
     public String getName() {
@@ -20,11 +23,11 @@ public class ElectionRequest {
         this.name = name;
     }
 
-    public TimeZone getTime() {
-        return time;
+    public Integer getExpirationToMinutes() {
+        return expirationToMinutes;
     }
 
-    public void setTime(TimeZone time) {
-        this.time = time;
+    public void setExpirationToMinutes(Integer expirationToMinutes) {
+        this.expirationToMinutes = expirationToMinutes;
     }
 }
