@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: election-service
+
+url:
+  validate:
+    taxId: https://user-info.herokuapp.com/users/

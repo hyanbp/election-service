@@ -26,7 +26,7 @@ public class ElectionApi {
 
 
     @PostMapping
-    @ApiOperation(value = "Cria sessão/pauta de votação")
+    @ApiOperation(value = "Cria uma pauta de votação")
     public Mono<String> postElection(ElectionRequest request) {
 
         return electionService.create(request.getName(), request.getExpirationToMinutes());
@@ -38,9 +38,7 @@ public class ElectionApi {
                                 @RequestParam @ApiParam("Escolha do voto (SIM, NAO)") DecisionType decisionType,
                                 @RequestParam String  associate) {
 
-
-
-        return electionService.voting(electionCode,decisionType.name(),associate);
+        return electionService.vote(electionCode,decisionType.name(),associate);
     }
 
 

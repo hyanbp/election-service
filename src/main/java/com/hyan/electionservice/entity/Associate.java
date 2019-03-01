@@ -7,16 +7,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Associate {
 
     @Id
-    private String id;
+    private String taxId;
     private boolean alreadyVoted = Boolean.FALSE;
 
 
-    public String getId() {
-        return id;
+    public String getTaxId() {
+        return taxId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
     }
 
     public boolean isAlreadyVoted() {
