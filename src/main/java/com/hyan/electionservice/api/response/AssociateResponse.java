@@ -1,17 +1,16 @@
-package com.hyan.electionservice.entity;
+package com.hyan.electionservice.api.response;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "associates")
-public class Associate {
+public class AssociateResponse {
 
-    @Id
     private String taxId;
-    private boolean alreadyVoted = Boolean.FALSE;
+    private boolean alreadyVoted;
 
-    public Associate(String taxId){
+    public AssociateResponse(String taxId, boolean alreadyVoted) {
         this.taxId = taxId;
+        this.alreadyVoted =alreadyVoted;
     }
 
     public String getTaxId() {

@@ -2,6 +2,7 @@ package com.hyan.electionservice.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyan.electionservice.api.request.ElectionRequest;
+import com.hyan.electionservice.api.response.ElectionResponse;
 import com.hyan.electionservice.api.response.ResultVoteResponse;
 import com.hyan.electionservice.entity.DecisionType;
 import com.hyan.electionservice.service.ElectionService;
@@ -27,9 +28,10 @@ public class ElectionApi {
 
     @PostMapping
     @ApiOperation(value = "Cria uma pauta de votação")
-    public Mono<String> postElection(ElectionRequest request) {
+    public Mono<ElectionResponse> postElection(ElectionRequest request) {
 
-        return electionService.create(request.getName(), request.getExpirationToMinutes());
+        return electionService.create(request.getName(), request.getExpirationToMinutes())
+                .map(x -> new ElectionResponse(x));
     }
 
     @PostMapping("/{electionCode}/vote")

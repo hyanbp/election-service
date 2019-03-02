@@ -1,8 +1,6 @@
 package com.hyan.electionservice.mapper;
 
 import com.hyan.electionservice.entity.Election;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.time.LocalDateTime;
 
 public class ElectionMapper {
