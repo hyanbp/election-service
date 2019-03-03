@@ -44,6 +44,7 @@ public class ElectionApi {
                                 @RequestParam @ApiParam("Escolha do voto (SIM, NAO)") DecisionType decisionType,
                                 @RequestParam String  associate) {
         logger.info("Iniciando votação para a eleição/pauta:[{}] para o Associado:[{}]", electionCode, associate);
+
         return electionService.vote(electionCode,decisionType.name(),associate)
                 .doOnSuccess(y ->  logger.info("Votação realizada com sucesso para o Associado: [{}]", associate));
     }
