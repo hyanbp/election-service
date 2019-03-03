@@ -22,7 +22,7 @@ public class ElectionService {
 
     public static final String ASSOCIATE_ALREADY_VOTED_MESSAGE = "Associado já realizou o voto. Só é permitido um voto por sessão.";
     public static final String ASSOCIATE_NOT_FOUND_MESSAGE = "Associado não encontrado.";
-    public static final String ASSOCIATE_NOT_ENABLED_VOTED_MESSAGE = "Associado não habilitado a votar.";
+    public static final String TAXID_NOT_ENABLED_VOTED_MESSAGE = "CPF não habilitado a votar.";
     public static final String CLOSED_SESSION_MESSAGE = "Sessão da Eleição/Pauta de votação ENCERRADA.";
     public static final String ELECTION_NOT_FOUND_MESSAGE = "Eleição/Pauta de votação não encontrada.";
 
@@ -80,7 +80,7 @@ public class ElectionService {
     private Mono<Associate> getAssociate(String associateCode) {
         return validateTaxIdClient.validateTaxId(associateCode)
                 .filter(x -> ABLE_TO_VOTE.name().equals(x.getStatus()))
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, ASSOCIATE_NOT_ENABLED_VOTED_MESSAGE)))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, TAXID_NOT_ENABLED_VOTED_MESSAGE)))
                 .flatMap(a -> associateRepository.findById(associateCode))
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, ASSOCIATE_NOT_FOUND_MESSAGE)))
                 .filter(x -> !x.isAlreadyVoted())
