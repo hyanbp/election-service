@@ -20,11 +20,9 @@ import reactor.core.publisher.Mono;
 public class ElectionApi {
 
     private ElectionService electionService;
-    private ObjectMapper objectMapper;
 
-    public ElectionApi(ElectionService electionService, ObjectMapper objectMapper) {
+    public ElectionApi(ElectionService electionService) {
         this.electionService = electionService;
-        this.objectMapper = objectMapper;
     }
     private Logger logger = LoggerFactory.getLogger(ElectionApi.class);
 

@@ -14,6 +14,12 @@ public class ElectionRequest {
     @ApiModelProperty("Tempo de duração da pauta.")
     private Integer expirationToMinutes;
 
+    public ElectionRequest(String name, Integer expirationToMinutes){
+        this.name = name;
+        this.expirationToMinutes = expirationToMinutes;
+    }
+
+    public ElectionRequest(){}
 
     public String getName() {
         return name;
