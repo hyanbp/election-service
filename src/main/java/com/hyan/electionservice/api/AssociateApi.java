@@ -35,7 +35,7 @@ public class AssociateApi {
 
         logger.info("Criando um Associado. CPF [{}]", request.getTaxId());
         return associateService.create(request.getTaxId())
-                .map(x -> new AssociateResponse(x.getTaxId(), x.isAlreadyVoted()))
+                .map(x -> new AssociateResponse(x.getTaxId()))
                 .doOnSuccess(y -> logger.info("Criação de Associado realizado com sucesso. CPF [{}]", y.getTaxId()));
     }
 

@@ -8,9 +8,8 @@ public class Associate {
 
     @Id
     private String taxId;
-    private boolean alreadyVoted = Boolean.FALSE;
 
-    public Associate(String taxId){
+    public Associate(String taxId) {
         this.taxId = taxId;
     }
 
@@ -20,13 +19,5 @@ public class Associate {
 
     public void setTaxId(String taxId) {
         this.taxId = taxId;
-    }
-
-    public boolean isAlreadyVoted() {
-        return alreadyVoted;
-    }
-
-    public void setAlreadyVoted(boolean alreadyVoted) {
-        this.alreadyVoted = alreadyVoted;
     }
 }

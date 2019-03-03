@@ -6,11 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class AssociateResponse {
 
     private String taxId;
-    private boolean alreadyVoted;
 
-    public AssociateResponse(String taxId, boolean alreadyVoted) {
+    public AssociateResponse(String taxId) {
         this.taxId = taxId;
-        this.alreadyVoted =alreadyVoted;
     }
 
     public String getTaxId() {
@@ -21,11 +19,4 @@ public class AssociateResponse {
         this.taxId = taxId;
     }
 
-    public boolean isAlreadyVoted() {
-        return alreadyVoted;
-    }
-
-    public void setAlreadyVoted(boolean alreadyVoted) {
-        this.alreadyVoted = alreadyVoted;
-    }
 }
