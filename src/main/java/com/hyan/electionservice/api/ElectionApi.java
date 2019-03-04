@@ -1,17 +1,19 @@
 package com.hyan.electionservice.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyan.electionservice.api.request.ElectionRequest;
 import com.hyan.electionservice.api.response.ElectionResponse;
-import com.hyan.electionservice.api.response.ResultVoteResponse;
+import com.hyan.electionservice.api.response.ElectionResultVoteResponse;
 import com.hyan.electionservice.entity.DecisionType;
 import com.hyan.electionservice.service.ElectionService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -19,6 +21,7 @@ import reactor.core.publisher.Mono;
 @Validated
 public class ElectionApi {
 
+    public static final String BAD_REQUEST_MESSAGE = "Parâmetros obrigatórios não informados.";
     private ElectionService electionService;
 
     public ElectionApi(ElectionService electionService) {
@@ -29,8 +32,12 @@ public class ElectionApi {
 
     @PostMapping
     @ApiOperation(value = "Cria uma eleição/pauta de votação")
-    public Mono<ElectionResponse> postElection(ElectionRequest request) {
+    public Mono<ElectionResponse> postElection(@RequestBody ElectionRequest request) {
         logger.info("Criando uma eleição/pauta de votação, Nome:[{}]", request.getName());
+
+        if (StringUtils.isBlank(request.getName())) {
+            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, BAD_REQUEST_MESSAGE);
+        }
         return electionService.create(request.getName(), request.getExpirationToMinutes())
                 .map(x -> new ElectionResponse(x))
                 .doOnSuccess(y -> logger.info("Eleição criada com sucesso. Codigo: [{}]", y.getElectionCode()));
@@ -38,7 +45,7 @@ public class ElectionApi {
 
     @PostMapping("/{electionCode}/vote")
     @ApiOperation(value = "Votação")
-    public Mono<Void> postVote(@PathVariable String electionCode,
+    public Mono<Void> postVote(@PathVariable String electionCode ,
                                 @RequestParam @ApiParam("Escolha do voto (SIM, NAO)") DecisionType decisionType,
                                 @RequestParam String  associate) {
         logger.info("Iniciando votação para a eleição/pauta:[{}] para o Associado:[{}]", electionCode, associate);
@@ -50,10 +57,10 @@ public class ElectionApi {
 
     @GetMapping("/{electionCode}/result")
     @ApiOperation(value = "Resultado da votação")
-    public Mono<ResultVoteResponse> getResultVote(@PathVariable String electionCode) {
+    public Mono<ElectionResultVoteResponse> getResultVote(@PathVariable  String electionCode ) {
         logger.info("Inicando busca pelo resultado da Eleição. Código da eleição [{}]",electionCode);
         return electionService.resultVote(electionCode)
-                .map(el  ->  new ResultVoteResponse(el.getYes(),el.getNo()))
+                .map(el  ->  new ElectionResultVoteResponse(el.getYes(),el.getNo()))
                 .doOnSuccess(x -> logger.info("Busca de resultado realizado com sucesso para o Código da eleição [{}]", electionCode));
     }
 

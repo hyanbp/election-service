@@ -1,15 +1,15 @@
 package com.hyan.electionservice.api.response;
 
-public class ResultVoteResponse {
+public class ElectionResultVoteResponse {
 
     Integer yes;
 
     Integer no;
 
-    public ResultVoteResponse() {
+    public ElectionResultVoteResponse() {
     }
 
-    public ResultVoteResponse(Integer yes, Integer no) {
+    public ElectionResultVoteResponse(Integer yes, Integer no) {
         this.yes = yes;
         this.no = no;
     }

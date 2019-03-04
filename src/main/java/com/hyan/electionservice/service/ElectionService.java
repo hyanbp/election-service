@@ -12,6 +12,7 @@ import com.hyan.electionservice.repository.HistoryElectionRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -52,9 +53,9 @@ public class ElectionService {
 
     public Mono<Void> vote(String electionCode, String decisionType, String associateCode) {
         return Mono.zip(
-                getAssociate(associateCode),
-                getElection(electionCode),
-                getHistoryElection(associateCode, electionCode))
+                toAssociate(associateCode),
+                toElection(electionCode),
+                toHistoryElection(associateCode, electionCode))
                 .map(o -> {
                     if (DecisionType.SIM.name().equalsIgnoreCase(decisionType)) {
                         o.getT2().addYes();
@@ -72,15 +73,21 @@ public class ElectionService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, ELECTION_NOT_FOUND_MESSAGE)));
     }
 
+    public Flux<Election> findSessionCloesed() {
+        return electionRepository.findAll()
+                .filter(x -> Duration.between(x.getOpenElection(), LocalDateTime.now()).toMinutes() > x.getExpirationMinutes())
+                .map(y -> y);
+    }
 
-    private Mono<Election> getElection(String electionCode) {
+
+    private Mono<Election> toElection(String electionCode) {
         return electionRepository.findById(electionCode)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, ELECTION_NOT_FOUND_MESSAGE)))
                 .filter(x -> Duration.between(x.getOpenElection(), LocalDateTime.now()).toMinutes() <= x.getExpirationMinutes())
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, CLOSED_SESSION_MESSAGE)));
     }
 
-    private Mono<Associate> getAssociate(String associateCode) {
+    private Mono<Associate> toAssociate(String associateCode) {
         return validateTaxIdClient.validateTaxId(associateCode)
                 .filter(x -> ABLE_TO_VOTE.name().equals(x.getStatus()))
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, TAXID_NOT_ENABLED_VOTED_MESSAGE)))
@@ -88,7 +95,7 @@ public class ElectionService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, ASSOCIATE_NOT_FOUND_MESSAGE)));
     }
 
-    private Mono<Boolean> getHistoryElection(String taxId, String electionCode) {
+    private Mono<Boolean> toHistoryElection(String taxId, String electionCode) {
         return historyElectionRepository.findByTaxIdAndElectionCode(taxId, electionCode)
                 .hasElement()
                 .filter(x -> !x)
