@@ -4,6 +4,11 @@ public class ValidateTaxIdResponse {
 
     private String status;
 
+    public ValidateTaxIdResponse (){}
+
+    public ValidateTaxIdResponse(String status){
+        this.status = status;
+    }
 
     public String getStatus() {
         return status;

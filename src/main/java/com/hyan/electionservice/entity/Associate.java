@@ -13,6 +13,8 @@ public class Associate {
         this.taxId = taxId;
     }
 
+    public Associate(){}
+
     public String getTaxId() {
         return taxId;
     }
