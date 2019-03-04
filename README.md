@@ -1,10 +1,17 @@
 # election-service
 Microsserviço de criação e votação de uma eleição/pauta.
 
-## Sobre
+## Técnologias ultilizadas
+* Java 8+
+* Spring - Framework WebFlux
+* Springboot
+* MongoDB
+* RabbitMq
+
+### Sobre
 Election-service é um serviço de backend para atender a criação de uma pauta/eleição e também permite realizar a votação e a contagem dos votos.
 
-### Como usar o serviço
+#### Como usar o serviço
 Primeiramente deve ser cadastrar um associado, informando apenas o numero do CPF.
 
 [Cadastrar um Associado](https://election-service.herokuapp.com/swagger-ui.html#/associate-api/postElectionUsingPOST)
