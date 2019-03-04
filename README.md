@@ -7,7 +7,7 @@ Election-service é um serviço de backend para atender a criação de uma pauta
 ### Como usar o serviço
 Primeiramente deve ser cadastrar um associado, informando apenas o numero do CPF.
 
-[Cadastrar Associado](https://election-service.herokuapp.com/swagger-ui.html#/associate-api/postElectionUsingPOST)
+[Cadastrar um Associado](https://election-service.herokuapp.com/swagger-ui.html#/associate-api/postElectionUsingPOST)
  
 
 Logo após vem a criação da pauta/eleição, informando apenas o nome da pauta/eleição e o tempo duração que essa pauta/eleição irá durar.
