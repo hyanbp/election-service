@@ -30,8 +30,14 @@ Ao criares a pauta/eleição você receberá no retorno o código da mesma. EX:
 
 
 
-Com o código da pauta/eleição em mãos, você poderá realizar o seu voto junto com seu CPF **cadastrado** como associado e sua decisão de voto (SIM/NAO)
+Com o **código da pauta/eleição*** em mãos, você poderá realizar o seu voto junto com seu CPF **cadastrado** como associado e sua decisão de voto (SIM/NAO). EX bodyRequest:
+```
+{
+  "decision": "string",
+  "taxIdAssociate": "string"
+}
 
+```
 [Realizar o voto](https://election-service.herokuapp.com/swagger-ui.html#/election-api/postVoteUsingPOST)
 
 Lembrando que o seu CPF deve ser válido e você só pode realizar um **voto** por **ELEIÇÃO/PAUTA**
