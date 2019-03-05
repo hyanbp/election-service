@@ -11,8 +11,10 @@ import reactor.core.publisher.Mono;
 import static com.hyan.electionservice.entity.EnableVoteType.ABLE_TO_VOTE;
 
 @Service
-public class AssociateService {
+public class
+AssociateService {
 
+    public static final String ASSOCIATE_DUPLICATED_MESSAGE = "Associado já cadastrado.";
     private AssociateRepository associateRepository;
 
     private ValidateTaxIdClient validateTaxIdClient;
@@ -20,13 +22,17 @@ public class AssociateService {
     public static final String TAXID_NOT_ENABLED_VOTED_MESSAGE = "CPF não habilitado a votar.";
     public static final String ASSOCIATE_NOT_FOUND_MESSAGE = "Associado não encontrado.";
 
-    public AssociateService(AssociateRepository associateRepository, ValidateTaxIdClient validateTaxIdClient){
+    public AssociateService(AssociateRepository associateRepository, ValidateTaxIdClient validateTaxIdClient) {
         this.associateRepository = associateRepository;
         this.validateTaxIdClient = validateTaxIdClient;
     }
 
-    public Mono<Associate> create(String taxId){
-        return associateRepository.save(new Associate(taxId));
+    public Mono<Associate> create(String taxId) {
+        return associateRepository.findById(taxId)
+                .hasElement()
+                .filter(x -> !x)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, ASSOCIATE_DUPLICATED_MESSAGE)))
+                .flatMap(y -> associateRepository.save(new Associate(taxId)));
     }
 
     public Mono<Associate> getAssociate(String associateCode) {

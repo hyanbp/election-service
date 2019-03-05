@@ -58,4 +58,12 @@ public class AssociateServiceTest {
 
 
     }
+
+    @Test(expected = ResponseStatusException.class)
+    public void createAssociateDuplicatedHavingAssociateUnathorized(){
+        Mockito.when(associateRepository.findById(Mockito.anyString())).thenReturn(Mono.just(new Associate()));
+        Associate associate = associateService.create("teste").block();
+        Assert.assertNull(associate);
+    }
+
 }
