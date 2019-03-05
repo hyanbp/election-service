@@ -66,4 +66,13 @@ public class AssociateServiceTest {
         Assert.assertNull(associate);
     }
 
+    @Test
+    public void createAssociateSuccess(){
+        Mockito.when(associateRepository.findById("teste")).thenReturn(Mono.empty());
+        Mockito.when(associateRepository.save(Mockito.any(Associate.class))).thenReturn(Mono.just(new Associate("teste")));
+        Associate associate = associateService.create("teste").block();
+
+        Assert.assertNotNull(associate);
+        Mockito.verify(associateRepository, Mockito.timeout(1)).save(Mockito.any(Associate.class));
+    }
 }
