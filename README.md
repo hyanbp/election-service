@@ -45,3 +45,11 @@ Lembrando que o seu CPF deve ser válido e você só pode realizar um **voto** p
 Para realizar a busca pela contagem dos votos da eleição/pauta, basta apenas informar o código da eleição/pauta
 
 [Contagem dos votos](https://election-service.herokuapp.com/swagger-ui.html#/election-api/getResultVoteUsingGET)
+
+##### Acessos
+
+Url MongoDB : https://www.mlab.com/databases/heroku_vggztlbz/
+```
+user: heroku_vggztlbz
+pwd: 8qRE9BkfVN2b5mp
+```
