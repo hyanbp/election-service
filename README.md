@@ -30,7 +30,7 @@ Ao criares a pauta/eleição você receberá no retorno o código da mesma. EX:
 
 
 
-Com o **código da pauta/eleição*** em mãos, você poderá realizar o seu voto junto com seu CPF **cadastrado** como associado e sua decisão de voto (SIM/NAO). EX bodyRequest:
+Com o **código da pauta/eleição** em mãos, você poderá realizar o seu voto junto com seu CPF **cadastrado** como associado e sua decisão de voto (SIM/NAO). EX bodyRequest:
 ```
 {
   "decision": "string",
