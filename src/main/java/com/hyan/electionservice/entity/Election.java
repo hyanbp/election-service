@@ -15,6 +15,8 @@ public class Election {
     private LocalDateTime openElection;
     private Integer yes;
     private Integer no;
+    private Boolean closedSession = Boolean.FALSE;
+
 
 
     public String getId() {
@@ -73,6 +75,13 @@ public class Election {
         this.no = no + 1;
     }
 
+    public Boolean isClosedSession() {
+        return closedSession;
+    }
+
+    public void setClosedSession(Boolean closedSession) {
+        this.closedSession = closedSession;
+    }
 
     public static final class Builder {
         private String name;
@@ -80,6 +89,7 @@ public class Election {
         private LocalDateTime openElection;
         private Integer yes;
         private Integer no;
+        private Boolean closedSession = Boolean.FALSE;
 
 
         private Builder() {
@@ -114,6 +124,11 @@ public class Election {
             return this;
         }
 
+        public Builder closedSession(Boolean isClosedSession) {
+            this.closedSession = isClosedSession;
+            return this;
+        }
+
         public Election build() {
             Election election = new Election();
             election.setName(name);
@@ -121,6 +136,7 @@ public class Election {
             election.setNo(no);
             election.setYes(yes);
             election.setOpenElection(openElection);
+            election.setClosedSession(closedSession);
             return election;
         }
     }

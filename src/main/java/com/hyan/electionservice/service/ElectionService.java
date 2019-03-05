@@ -43,11 +43,11 @@ public class ElectionService {
     }
 
 
-    public Mono<Void> vote(String electionCode, String decisionType, String associateCode) {
+    public Mono<Void> vote(String electionCode, String decisionType, String taxIdAssociate) {
         return Mono.zip(
-                associateService.getAssociate(associateCode),
+                associateService.getAssociate(taxIdAssociate),
                 getElection(electionCode),
-                getHistoryElection(associateCode, electionCode))
+                getHistoryElection(taxIdAssociate, electionCode))
                 .map(o -> {
                     if (DecisionType.SIM.name().equalsIgnoreCase(decisionType)) {
                         o.getT2().addYes();

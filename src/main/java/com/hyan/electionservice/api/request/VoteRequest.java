@@ -6,34 +6,34 @@ import javax.validation.constraints.NotNull;
 
 public class VoteRequest {
 
-    @ApiModelProperty("Documento de identificação do associado.")
+    @ApiModelProperty("CPF do associado.")
     @NotNull(message = "Parâmetros obrigatórios não informados.")
-    String associateCode;
+    String taxIdAssociate;
 
     @ApiModelProperty("Escolha da decisão do voto (SIM ou NAO).")
     @NotNull(message = "Parâmetros obrigatórios não informados.")
-    String decisionType;
+    String decision;
 
 
-    public VoteRequest (String associateCode, String decisionType){
-        this.associateCode = associateCode;
-        this.decisionType = decisionType;
+    public VoteRequest (String taxIdAssociate, String decisionType){
+        this.taxIdAssociate = taxIdAssociate;
+        this.decision = decisionType;
     }
     public VoteRequest(){}
 
-    public String getAssociateCode() {
-        return associateCode;
+    public String getTaxIdAssociate() {
+        return taxIdAssociate;
     }
 
-    public void setAssociateCode(String associateCode) {
-        this.associateCode = associateCode;
+    public void setTaxIdAssociate(String taxIdAssociate) {
+        this.taxIdAssociate = taxIdAssociate;
     }
 
-    public String getDecisionType() {
-        return decisionType;
+    public String getDecision() {
+        return decision;
     }
 
-    public void setDecisionType(String decisionType) {
-        this.decisionType = decisionType;
+    public void setDecision(String decision) {
+        this.decision = decision;
     }
 }

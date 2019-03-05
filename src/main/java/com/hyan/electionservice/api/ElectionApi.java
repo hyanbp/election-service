@@ -51,11 +51,11 @@ public class ElectionApi {
     @ApiOperation(value = "Votação")
     public Mono<Void> postVote(@PathVariable @ApiParam(value = "Código da Eleição/pauta.", required = true) String electionCode,
                                @RequestBody @Valid VoteRequest request) {
-        logger.info("Iniciando votação para a eleição/pauta:[{}] para o Associado:[{}]", electionCode, request.getAssociateCode());
+        logger.info("Iniciando votação para a eleição/pauta:[{}] para o Associado:[{}]", electionCode, request.getTaxIdAssociate());
 
-        DecisionType decisionType = DecisionType.get(request.getDecisionType());
-        return electionService.vote(electionCode, decisionType.name(), request.getAssociateCode())
-                .doOnSuccess(y -> logger.info("Votação realizada com sucesso para o Associado: [{}]", request.getAssociateCode()));
+        DecisionType decisionType = DecisionType.get(request.getDecision());
+        return electionService.vote(electionCode, decisionType.name(), request.getTaxIdAssociate())
+                .doOnSuccess(y -> logger.info("Votação realizada com sucesso para o Associado: [{}]", request.getTaxIdAssociate()));
     }
 
 
