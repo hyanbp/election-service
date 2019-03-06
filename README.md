@@ -46,6 +46,10 @@ Para realizar a busca pela contagem dos votos da eleição/pauta, basta apenas i
 
 [Contagem dos votos](https://election-service.herokuapp.com/swagger-ui.html#/election-api/getResultVoteUsingGET)
 
+@Scheduled
+Também existe um job que roda de minuto a minuto, vendo as sessões que estão encerradas pelo tempo de expiração da sessão e executa o fechamento.
+após isso ele informa via *fila* todos os dados da eleição/pauta encerrados pelo tempo de sessão. 
+
 ##### Acessos
 
 Url MongoDB : https://www.mlab.com/databases/heroku_vggztlbz/
