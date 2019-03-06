@@ -1,5 +1,7 @@
 package com.hyan.electionservice.service;
 
+import com.hyan.electionservice.entity.Associate;
+import com.hyan.electionservice.entity.DecisionType;
 import com.hyan.electionservice.entity.Election;
 import com.hyan.electionservice.entity.HistoryElection;
 import com.hyan.electionservice.repository.ElectionRepository;
@@ -17,14 +19,22 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ElectionServiceTest {
 
+    public static final String ELECTION_CODE = "123";
+    public static final String TAX_ID_TESTE = "00001000010001";
     @InjectMocks
     private ElectionService electionService;
 
     @Mock
     private ElectionRepository electionRepository;
+
+    @Mock
+    private AssociateService associateService;
 
     @Mock
     private HistoryElectionRepository historyElectionRepository;
@@ -33,7 +43,7 @@ public class ElectionServiceTest {
     @Test
     public void createElectionShouldElectiontShouldRetunSuccess() {
         Election election = ElectionStub.create();
-        Mockito.when(electionRepository.save(Mockito.any())).thenReturn(Mono.just(election));
+        when(electionRepository.save(any())).thenReturn(Mono.just(election));
 
         String expected = electionService.create("teste", 1).block();
 
@@ -44,7 +54,7 @@ public class ElectionServiceTest {
     @Test
     public void getResultElectionShouldElectiontReturnSuccess() {
         Election election = ElectionStub.create();
-        Mockito.when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.just(election));
+        when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.just(election));
 
         Election expected = electionService.resultVote("teste").block();
 
@@ -56,7 +66,7 @@ public class ElectionServiceTest {
 
     @Test(expected = ResponseStatusException.class)
     public void getResultElectionShouldNotFoundElection() {
-        Mockito.when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.empty());
+        when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.empty());
 
         Election expected = electionService.resultVote("teste").block();
         Assert.assertNull(expected);
@@ -66,7 +76,7 @@ public class ElectionServiceTest {
     @Test
     public void getElectionShouldReturnSuccess() {
         Election expected = ElectionStub.create();
-        Mockito.when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.just(expected));
+        when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.just(expected));
 
         Election election = electionService.getElection("teste").block();
 
@@ -78,7 +88,7 @@ public class ElectionServiceTest {
 
     @Test(expected = ResponseStatusException.class)
     public void getElectionHavingNotFoundElctionbyId() {
-        Mockito.when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.empty());
+        when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.empty());
         electionService.getElection("teste").block();
     }
 
@@ -88,7 +98,7 @@ public class ElectionServiceTest {
         expected.setOpenElection(LocalDateTime.now().minusMinutes(11L));
         expected.setExpirationMinutes(10);
 
-        Mockito.when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.just(expected));
+        when(electionRepository.findById(Mockito.anyString())).thenReturn(Mono.just(expected));
 
         electionService.getElection("teste").block();
 
@@ -96,15 +106,35 @@ public class ElectionServiceTest {
 
     @Test(expected = ResponseStatusException.class)
     public void getElectionHistoryHasAssociateAlreadyVotedSession() {
-        Mockito.when(historyElectionRepository.findByTaxIdAndElectionCode(Mockito.anyString(), Mockito.anyString())).thenReturn(Mono.just(new HistoryElection()));
+        when(historyElectionRepository.findByTaxIdAndElectionCode(Mockito.anyString(), Mockito.anyString())).thenReturn(Mono.just(new HistoryElection()));
         Assert.assertTrue(electionService.getHistoryElection("teste", "testeCode").block());
 
     }
 
     @Test
     public void getElectionHistoryHasAssociateNotVotedSession() {
-        Mockito.when(historyElectionRepository.findByTaxIdAndElectionCode(Mockito.anyString(), Mockito.anyString())).thenReturn(Mono.empty());
+        when(historyElectionRepository.findByTaxIdAndElectionCode(Mockito.anyString(), Mockito.anyString())).thenReturn(Mono.empty());
         Assert.assertFalse(electionService.getHistoryElection("teste", "testeCode").block());
+
+    }
+
+    @Test
+    public void executeVoteSucces(){
+        Election election = ElectionStub.create();
+        when(electionRepository.findById(ELECTION_CODE)).thenReturn(Mono.just(election));
+        when(electionService.getElection(ELECTION_CODE)).thenReturn(Mono.just(election));
+        when(associateService.getAssociate(TAX_ID_TESTE)).thenReturn(Mono.just(new Associate(TAX_ID_TESTE)));
+        when(historyElectionRepository.findByTaxIdAndElectionCode(TAX_ID_TESTE, ELECTION_CODE)).thenReturn(Mono.empty());
+        when(electionService.getHistoryElection(TAX_ID_TESTE,ELECTION_CODE)).thenReturn(Mono.empty());
+        when(electionRepository.save(any())).thenReturn(Mono.empty());
+        when(historyElectionRepository.save(any())).thenReturn(Mono.empty());
+
+
+        electionService.vote(ELECTION_CODE, DecisionType.NAO.name(),TAX_ID_TESTE).block();
+
+        Mockito.verify(electionRepository, times(1)).save(any(Election.class));
+        Mockito.verify(historyElectionRepository, times(1)).save(any(HistoryElection.class));
+
 
     }
 
