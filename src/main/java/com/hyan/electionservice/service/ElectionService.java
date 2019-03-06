@@ -7,6 +7,8 @@ import com.hyan.electionservice.entity.HistoryElection;
 import com.hyan.electionservice.mapper.ElectionMapper;
 import com.hyan.electionservice.repository.ElectionRepository;
 import com.hyan.electionservice.repository.HistoryElectionRepository;
+import org.apache.commons.lang3.BooleanUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,6 +17,9 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+
+import static java.lang.Boolean.TRUE;
+import static org.apache.commons.lang3.BooleanUtils.negate;
 
 @Service
 public class ElectionService {
@@ -61,14 +66,8 @@ public class ElectionService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, ELECTION_NOT_FOUND_MESSAGE)));
     }
 
-    public Flux<Election> executeSessionClosed() {
-        return electionRepository.findAll()
-                .filter(x -> Duration.between(x.getOpenElection(), LocalDateTime.now()).toMinutes() > x.getExpirationMinutes() && !x.isClosedSession())
-                .map(y -> {
-                    y.setClosedSession(Boolean.TRUE);
-                    electionRepository.save(y).subscribe();
-                    return y;
-                });
+    public Election getElectionSessionClosed() {
+        return electionRepository.findAllByClosedSession(false).blockFirst();
     }
 
 
@@ -84,5 +83,10 @@ public class ElectionService {
                 .hasElement()
                 .filter(x -> !x)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, ASSOCIETE_ALREADY_VOTED_IN_ELECTION_MESSAGE)));
+    }
+
+    public void setClosedSession(Election election) {
+        election.setClosedSession(Boolean.TRUE);
+        electionRepository.save(election).subscribe();
     }
 }
