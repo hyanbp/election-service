@@ -53,3 +53,9 @@ Url MongoDB : https://www.mlab.com/databases/heroku_vggztlbz/
 user: heroku_vggztlbz
 pwd: 8qRE9BkfVN2b5mp
 ```
+
+Url Painel RabbitMQ : https://chimpanzee.rmq.cloudamqp.com 
+``` 
+user: ittfprrf
+pwd: cbatqRK0soL4xmXibyUSbiG-ijtqnZB3
+```
