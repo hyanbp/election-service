@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+import static com.hyan.electionservice.entity.DecisionType.*;
+
 @Document(collection = "elections")
 public class Election {
 
@@ -16,7 +18,6 @@ public class Election {
     private Integer yes;
     private Integer no;
     private Boolean closedSession = Boolean.FALSE;
-
 
 
     public String getId() {
@@ -73,6 +74,14 @@ public class Election {
 
     public void addNo() {
         this.no = no + 1;
+    }
+
+    public void addDecisionType(String decisionType) {
+        if (SIM.name().equalsIgnoreCase(decisionType)) {
+            addYes();
+        } else {
+            addNo();
+        }
     }
 
     public Boolean isClosedSession() {

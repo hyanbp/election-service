@@ -49,11 +49,7 @@ public class ElectionService {
                 getElection(electionCode),
                 getHistoryElection(taxIdAssociate, electionCode))
                 .map(o -> {
-                    if (DecisionType.SIM.name().equalsIgnoreCase(decisionType)) {
-                        o.getT2().addYes();
-                    } else {
-                        o.getT2().addNo();
-                    }
+                    o.getT2().addDecisionType(decisionType);
                     electionRepository.save(o.getT2()).subscribe();
                     historyElectionRepository.save(new HistoryElection(o.getT1().getTaxId(), o.getT2().getId())).subscribe();
                     return o;
@@ -65,10 +61,14 @@ public class ElectionService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, ELECTION_NOT_FOUND_MESSAGE)));
     }
 
-    public Flux<Election> findSessionCloesed() {
+    public Flux<Election> executeSessionClosed() {
         return electionRepository.findAll()
-                .filter(x -> Duration.between(x.getOpenElection(), LocalDateTime.now()).toMinutes() > x.getExpirationMinutes())
-                .map(y -> y);
+                .filter(x -> Duration.between(x.getOpenElection(), LocalDateTime.now()).toMinutes() > x.getExpirationMinutes() && !x.isClosedSession())
+                .map(y -> {
+                    y.setClosedSession(Boolean.TRUE);
+                    electionRepository.save(y).subscribe();
+                    return y;
+                });
     }
 
 

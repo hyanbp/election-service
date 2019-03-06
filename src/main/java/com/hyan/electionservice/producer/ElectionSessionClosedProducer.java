@@ -15,8 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @EnableScheduling
 public class ElectionSessionClosedProducer {
@@ -45,8 +43,7 @@ public class ElectionSessionClosedProducer {
     @Scheduled(fixedRate = 60000)
     public void produce() {
         logger.info("Iniciando a busca por Sessẽs encerradas.");
-        electionService.findSessionCloesed()
-                .collectList()
+        electionService.executeSessionClosed()
                 .map(x -> {
                     rabbitTemplate.send(exchange, rountigKey, new Message(convertObjectToByte(x), new MessageProperties()));
                     return x;
@@ -54,7 +51,7 @@ public class ElectionSessionClosedProducer {
 
     }
 
-    private byte[] convertObjectToByte(List<Election> election) {
+    private byte[] convertObjectToByte(Election election) {
         try {
             return objectMapper.writeValueAsString(election).getBytes();
         } catch (JsonProcessingException e) {
