@@ -50,16 +50,3 @@ Para realizar a busca pela contagem dos votos da eleição/pauta, basta apenas i
 Também existe um job que roda de minuto a minuto, vendo as sessões que estão encerradas pelo tempo de expiração da sessão e executa o fechamento.
 após isso ele informa via *fila* todos os dados da eleição/pauta encerrados pelo tempo de sessão. 
 
-##### Acessos
-
-Url MongoDB : https://www.mlab.com/databases/heroku_vggztlbz/
-```
-user: heroku_vggztlbz
-pwd: 8qRE9BkfVN2b5mp
-```
-
-Url Painel RabbitMQ : https://chimpanzee.rmq.cloudamqp.com 
-``` 
-user: ittfprrf
-pwd: cbatqRK0soL4xmXibyUSbiG-ijtqnZB3
-```
